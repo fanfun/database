@@ -1,0 +1,23 @@
+<databaseChangeLog logicalFilePath="rel2/product/student.xml"
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+	<preConditions>
+		<dbms type="postgresql" />
+	</preConditions>
+	
+	<changeSet id="create.table.student" author="ruanzf">
+		<createTable tableName="student">
+			<column name='name' type='varchar(64)' >
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+            <column name='nick' type='varchar(64)' />
+            <column name='nick_name' type='varchar(64)' />
+			<column name='school' type='int' />
+			<column name='phone' type='varchar(64)' />
+			<column name='time' type='varchar(32)' />
+			<column name='visit' type='int' />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+<databaseChangeLog logicalFilePath="rel2/product/topic.xml"
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+	<preConditions>
+		<dbms type="postgresql" />
+	</preConditions>
+	
+	<changeSet id="create.table.topic" author="ruanzf">
+		<createTable tableName="topic">
+			<column name="id" type="serial">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+            <column name='owner' type='varchar(64)' />
+			<column name='describe' type='varchar(256)' />
+			<column name='photo' type='varchar(64)' />
+			<column name='subject_id' type='int' />
+			<column name='up' type='int' />
+			<column name='createtime' type='int8' />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

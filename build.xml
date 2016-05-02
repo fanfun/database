@@ -1,0 +1,71 @@
+<project name="analyzer-db" basedir="." default="1.about">
+    <property file="${basedir}/build.properties" />
+    <property name="target.dir" value="${basedir}" />
+    <property name="lib.dir" value="${basedir}/${lib.dir}" />
+
+    <condition property="is.test">
+        <and>
+            <isset property="is.prod.env" />
+            <equals arg1="${is.prod.env}" arg2="false" />
+        </and>
+    </condition>
+
+    <tstamp>
+        <format property="date.stamp" pattern="yyyy/MM/dd hh:mm:ss" />
+    </tstamp>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" casesensitive="false">
+            <include name="org/postgresql/postgresql/9.3-1100-jdbc4/*.jar" />
+			<include name="org/liquibase/liquibase-core/2.0.5/*.jar" />
+    	</fileset>
+    </path>
+
+    <taskdef resource="liquibasetasks.properties">
+        <classpath refid="classpath"/>
+    </taskdef>
+
+    <target name="1.about" description="Show the project help info.">
+        <echo message="${date.stamp}" />
+        <echo message="This is ${app.name} dbmigration." />
+        <echo message="For postgres: 1.creat db, 2.creat-role/user, 3.create schema(ower-role)." />
+        <echo message="Database infos: " />
+        <echo message="jdbc.driver=${jdbc.driver}" />
+        <echo message="jdbc.url=${jdbc.url}" />
+        <echo message="super.name=${super.name}" />
+        <echo message="super.password=${super.password}" />
+        <echo message="username=${username}" />
+        <echo message="password=${password}" />
+        <echo message="schema=${schema}" />
+        <echo message="sleep 5 second for check username password jdbc.url................"/>
+        <!--<sleep seconds="5"/>-->
+    </target>
+
+    <target name="2.init.db" depends="1.about" description="Init db.">
+        <fail unless="is.test" message="ERROR! ${line.separator}WARM: This is product environment, mustn't do this target!!!!" />
+        <sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${super.name}" password="${super.password}" classpathref="classpath" encoding="UTF-8">
+            <fileset dir="${target.dir}/prod.data/init.db" casesensitive="false">
+                <include name="clean_liquibase_log_tables.sql" />
+                <include name="create_schema.sql" />
+            </fileset>
+        </sql>
+    </target>
+
+    <target name="3.upgrade.db" depends="1.about" description="Update database.">
+        <echo message="upgrade database." />
+        <!--rel1-->
+        <migrateDb script.dir="${target.dir}/prod.data/rel2" dropfirst="false" />
+    </target>
+	
+    <macrodef name="migrateDb">
+        <attribute name="script.dir" />
+        <!-- dropFirst do not work with schema -->
+        <attribute name="dropFirst" default="false" />
+        <sequential>
+            <echo message="Execute script: @{script.dir}" />
+            <updateDatabase defaultSchemaName="${schema}" changeLogFile="@{script.dir}/script_suite.xml" driver="${jdbc.driver}" url="${jdbc.url}" username="${username}" password="${password}" dropFirst="@{dropFirst}" promptOnNonLocalDatabase="${prompt.user.if.not.local.database}" classpathref="classpath" >
+                <changelogproperty name="target.dir" value="${target.dir}"/>
+            </updateDatabase>
+        </sequential>
+    </macrodef>
+</project>

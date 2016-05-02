@@ -1,0 +1,29 @@
+<databaseChangeLog logicalFilePath="rel2/product/product.xml"
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+	<preConditions>
+		<dbms type="postgresql" />
+	</preConditions>
+	
+	<changeSet id="create.table.product" author="ruanzf">
+		<createTable tableName="product">
+			<column name="id" type="serial" startWith="6000">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+            <column name='name' type='varchar(64)' />
+            <column name='owner' type='varchar(64)' />
+            <column name='nick' type='varchar(64)' />
+            <column name='phone' type='varchar(64)' />
+			<column name='describe' type='varchar(1024)' />
+			<column name='photo' type='text' />
+			<column name='school' type='int' />
+			<column name='status' type='int' />
+			<column name='type' type='int' />
+			<column name='item' type='int' />
+			<column name='createtime' type='int8' />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>
